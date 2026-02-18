@@ -35,13 +35,11 @@ useEffect(() => {
         event: "*",
         schema: "public",
         table: "bookmarks",
-        // removed filter from here
       },
       (payload) => {
         setBookmarks((current) => {
           if (payload.eventType === "INSERT") {
             const inserted = payload.new as Bookmark;
-            // filter by userId client-side
             if (inserted.user_id !== userId) return current;
             if (current.some((b) => b.id === inserted.id)) return current;
             return [inserted, ...current].sort(
@@ -91,7 +89,6 @@ useEffect(() => {
     return;
   }
 
-  // Optimistically add to UI immediately
   setBookmarks((current) => {
     if (current.some((b) => b.id === data.id)) return current;
     return [data as Bookmark, ...current].sort(
