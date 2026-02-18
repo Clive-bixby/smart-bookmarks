@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Smart Bookmark App
 
-## Getting Started
+A full-stack bookmark manager built with Next.js App Router and Supabase, featuring secure Google OAuth authentication, row-level security, and realtime synchronization.
 
-First, run the development server:
+🛠 Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Next.js 16 (App Router)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Supabase (Auth, Postgres, Realtime)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Tailwind CSS
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Vercel (Deployment)
 
-## Learn More
+🔐 Authentication
 
-To learn more about Next.js, take a look at the following resources:
+Google OAuth using PKCE flow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Implemented with @supabase/ssr
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Middleware (proxy) ensures session persistence across navigations
 
-## Deploy on Vercel
+Auth Flow:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+App → Google → Supabase → /auth/callback → /dashboard
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🛡 Security (Row-Level Security)
+
+Bookmarks table uses RLS policies:
+
+Users can only insert their own bookmarks
+
+Users can only view their own bookmarks
+
+Users can only delete their own bookmarks
+
+All enforced at the database level using:
+
+auth.uid() = user_id
+
+
+Even malicious queries cannot access other users’ data.
+
+⚡ Realtime
+
+Supabase Realtime subscription per user
+
+REPLICA IDENTITY FULL enabled for delete events
+
+Optimistic UI updates for instant UX
+
+Deduplication logic prevents double renders
+
+🧠 Challenges Faced & Solutions
+
+Implicit vs PKCE auth mismatch
+
+Fixed by using createBrowserClient from @supabase/ssr
+
+Session loss across navigation
+
+Implemented proxy middleware for SSR cookie persistence
+
+Delete events missing payload
+
+Enabled REPLICA IDENTITY FULL in Postgres
+
+Next.js 16 prerender redirect loop
+
+Forced dynamic rendering for authenticated routes
+
+✨ Features
+
+Google login
+
+Private bookmarks
+
+Add & delete
+
+Realtime sync across tabs
+
+Secure production deployment
