@@ -35,6 +35,7 @@ useEffect(() => {
         event: "*",
         schema: "public",
         table: "bookmarks",
+        filter: `user_id=eq.${userId}`, 
       },
       (payload) => {
         setBookmarks((current) => {
