@@ -19,6 +19,7 @@ export default async function DashboardPage() {
   const { data: bookmarks, error: bookmarksError } = await supabase
     .from("bookmarks")
     .select("id, user_id, title, url, created_at")
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
   if (bookmarksError) {
