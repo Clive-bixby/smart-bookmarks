@@ -22,6 +22,8 @@ export default async function DashboardPage() {
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
+  console.log("Logged in as:", user.id, user.email);
+
   if (bookmarksError) {
     return (
       <main className="mx-auto max-w-3xl p-6">
